@@ -1,0 +1,1 @@
+# Time series simulator (WN, AR, MA, ARMA)
