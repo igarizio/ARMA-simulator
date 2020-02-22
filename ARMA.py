@@ -45,7 +45,7 @@ class ARMA:
         ma = []
         for i in range(1, adj_n):
             visible_thetas = thetas[0:min(q, i)]  # At first, we only "see" some of the thetas.
-            visible_e_series = e_series[i - min(q, i):i]  # Same as above.
+            visible_e_series = e_series[i - min(q, i):i]  # The same happens to the white noise.
 
             reversed_thetas = visible_thetas[::-1]
 
@@ -81,7 +81,7 @@ class ARMA:
         ar = [e_series[0]]  # We start the series with a random value
         for i in range(1, adj_n):
             visible_phis = phis[0:min(p, i)]  # At first, we only "see" some of the phis.
-            visible_series = ar[i - min(p, i):i]  # Same as above.
+            visible_series = ar[i - min(p, i):i]  # The same happens to the white noise.
 
             reversed_phis = visible_phis[::-1]
 
