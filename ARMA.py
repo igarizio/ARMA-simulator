@@ -49,12 +49,17 @@ class ARMA:
 
             reversed_thetas = visible_thetas[::-1]
 
+            try:  # Getting e_t if we can.
+                e_t = visible_e_series[-1]
+            except IndexError:
+                e_t = 0
+
             # Main equation.
-            ma_t = mu + visible_e_series[-1] + np.dot(reversed_thetas, visible_e_series)
+            ma_t = mu + e_t + np.dot(reversed_thetas, visible_e_series)
 
             ma.append(ma_t)
 
-        ma = ma[q-1:]  # Dropping the first values that did not use all the thetas.
+        ma = ma[max(q-1, 0):]  # Dropping the first values that did not use all the thetas.
 
         return ma
 
@@ -116,9 +121,9 @@ class ARMA:
         q = len(thetas)
 
         adj_n = n + max(p, q)  # We use max to make sure we cover the lack of coefficients.
-        e_series = ARMA.generate_wn(adj_n, sigma)  # Base white noise.
+        e_series = ARMA.generate_wn(adj_n)  # Base white noise.
 
-        arma = [e_series[0]]  # We start the series with a random value (same as AR.)
+        arma = [e_series[0]]  # We start the series with a random value (same as AR).
         for i in range(1, adj_n):
             visible_phis = phis[0:min(p, i)]
             visible_thetas = thetas[0:min(q, i)]
@@ -128,10 +133,15 @@ class ARMA:
 
             visible_series = arma[i - min(p, i):i]
             visible_e_series = e_series[i - min(q, i):i]
+            
+            try:  # Getting e_t if we can.
+                e_t = visible_e_series[-1]
+            except IndexError:
+                e_t = 0
 
             # Main equation.
             ar_t = + np.dot(reversed_phis, visible_series)
-            ma_t = mu + visible_e_series[-1] + np.dot(reversed_thetas, visible_e_series)
+            ma_t = mu + e_t + np.dot(reversed_thetas, visible_e_series)
             arma_t = ar_t + ma_t
 
             arma.append(arma_t)
